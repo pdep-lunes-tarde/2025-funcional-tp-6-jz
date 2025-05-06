@@ -18,3 +18,45 @@ data Hamburguesa = Hamburguesa {
     ingredientes :: [Ingrediente]
 } deriving (Eq, Show)
 
+listaIngredientes :: Hamburguesa -> [Ingrediente]
+listaIngredientes hamburguesa = Hamburguesa {ingredientes hamburguesa}
+--recorro la lista hasta encontrar carne o pollo
+
+verificarSiEsCarne :: [Ingrediente] -> Bool
+verificarSiEsCarne lista = any
+
+ingredienteBase :: Hamburguesa -> Ingrediente
+ingredienteBase hamburguesa = 
+    |any (verificarSiEsCarne listaIngredientes hamburguesa) listaIngredientes hamburguesa
+
+verificarIncompatibilidad :: Ingrediente -> Hamburguesa -> Bool
+verificarIncompatibilidad ingrediente hamburguesa =
+  (ingredienteBase hamburguesa == Pollo && ingrediente == Carne) ||
+  (ingredienteBase hamburguesa == Carne && ingrediente == Pollo)
+
+-- implementar guardas con una funcion auxiliar
+agrandar:: Ingrediente -> Hamburguesa -> Hamburguesa
+agrandar ingrediente hamburguesa = 
+    |verificarIncompatibilidad ingrediente hamburguesa = error "Ingredientes incompatibles"
+    |otherwise = agregarIngrediente ingrediente hamburguesa
+
+
+
+agregarIngrediente :: Ingrediente -> Hamburguesa -> Hamburguesa
+agregarIngrediente ingrediente hamburguesa =
+  hamburguesa { ingredientes = ingrediente : ingredientes hamburguesa }
+
+
+descuento:: Number -> Hamburguesa -> Hamburguesa
+descuento numero hamburguesa = Hamburguesa {precioBase = numero * precioBase hamburguesa}
+pdepBurguer:: Hamburguesa -> Hamburguesa
+
+dobleCuarto::
+bigPdep ::
+delDia::
+
+hacerVeggie::
+
+cambiarPanDePati::
+
+dobleCuartoVegano::
