@@ -68,7 +68,7 @@ aplicarCambios = descuento 0.9 . agrandar Panceta . agrandar Panceta hamburguesa
 pdepBurguer :: Hamburguesa -> Hamburguesa
 pdepBurguer pdepBurga = aplicarCambios pdepBurga
 
-dobleCuarto:: cuartoDeLibra -> Hamburguesa
+dobleCuarto:: Hamburguesa -> Hamburguesa
 dobleCuarto cuartoDeLibra = agrandar Carne cuartoDeLibra
 
 
@@ -82,16 +82,15 @@ delDia hamburguesa = descuento 0.3 . agregarIngrediente Papas hamburguesa
 reemplazarCarnes :: Hamburguesa -> Hamburguesa
 reemplazarCarnes = reemplazarIngrediente Carne PatiVegano
 
+esBacon :: Ingrediente -> Bool
+esBacon ing = ing == Panceta
 
-reemplazarCheddar :: Hamburguesa -> Hamburguesa
-reemplazarCheddar = reemplazarIngrediente Cheddar QuesoDeAlmendras
 
-
-reemplazarBacon :: Hamburguesa -> Hamburguesa
-reemplazarBacon = reemplazarIngrediente Panceta BaconDeTofu
+esCheddar :: Ingrediente -> Bool
+esCheddar ing = ing == Cheddar
 
 reemplazarToppings :: Hamburguesa -> Hamburguesa
-reemplazarToppings = reemplazarBacon . reemplazarCheddar
+reemplazarToppings hamburguesa = reemplazarIngrediente esBacon BaconDeTofu . reemplazarIngrediente esCheddar QuesoDeAlmendras hamburguesa
 
 
 actualizarPrecio :: Hamburguesa -> Hamburguesa
@@ -100,21 +99,24 @@ actualizarPrecio hamburguesa = hamburguesa { precioBase = sum (map precioIngredi
 hacerVeggie:: Hamburguesa -> Hamburguesa
 hacerVeggie hamburguesa = actualizarPrecio . reemplazarCarnes . reemplazarToppings hamburguesa
 
+reemplazarSi :: (Ingrediente -> Bool) -> Ingrediente -> Ingrediente -> Ingrediente
+reemplazarSi condicion nuevoIng viejoIng  
+  | condicion viejoIng = nuevoIng
+    otherwise = viejoIng
 
-funcion :: Ingrediente -> Ingrediente -> Ingrediente
-funcion viejoIngrediente nuevoIngrediente = nuevoIngrediente
 
-reemplazarIngrediente :: Ingrediente -> Ingrediente -> Hamburguesa -> Hamburguesa
-reemplazarIngrediente viejoIng nuevoIng hamburguesa =
-  hamburguesa { ingredientes = map (reemplazo viejoIng nuevoIng) (ingredientes hamburguesa) }
 
-reemplazo :: Ingrediente -> Ingrediente -> Ingrediente -> Ingrediente
-reemplazo viejo nuevo actual
-  | actual == viejo = nuevo
-  | otherwise       = actual
+reemplazarIngrediente ::(Ingrediente -> Bool) -> Ingrediente -> Hamburguesa -> Hamburguesa
+reemplazarIngrediente condicion nuevoIng hamburguesa =
+  hamburguesa { ingredientes = map reemplazarSi condicion nuevoIng (ingredientes hamburguesa) }
+
+esPan :: Ingrediente -> Bool
+esPan ingrediente = ingrediente == Pan
+
+
 
 reemplazarPanes :: Hamburguesa -> Hamburguesa 
-reemplazarPanes hamburguesa = reemplazarIngrediente Pan PanIntegral hamburguesa
+reemplazarPanes hamburguesa = reemplazarIngrediente esPan PanIntegral hamburguesa
 
 
 cambiarPanDePati :: Hamburguesa -> Hamburguesa
@@ -122,3 +124,4 @@ cambiarPanDePati hamburguesa = actualizarPrecio . reemplazarPanes hamburguesa
 
 dobleCuartoVegano:: Hamburguesa -> Hamburguesa
 dobleCuartoVegano dobleCuarto = actualizarPrecio . hacerVeggie dobleCuarto
+
