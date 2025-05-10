@@ -79,7 +79,6 @@ delDia :: Hamburguesa -> Hamburguesa
 delDia hamburguesa = descuento 0.3 . agregarIngrediente Papas hamburguesa
 
 
-
 reemplazarCarnes :: Hamburguesa -> Hamburguesa
 reemplazarCarnes = reemplazarIngrediente Carne PatiVegano
 
